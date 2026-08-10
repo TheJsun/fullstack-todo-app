@@ -16,4 +16,8 @@ public class CategoryService {
   public Optional<Category> findById(Long id) {
     return this.repo.findById(id);
   }
+
+  public Optional<Category> findByName(String name) {
+    return this.repo.findByName(name);
+  }
 }

@@ -38,6 +38,7 @@ public class TodoService {
     Todo createdTodo = this.mapper.map(data, Todo.class);
     Category foundCategory = resolveCategory(data.getCategoryId());
     createdTodo.setCategory(foundCategory);
+    createdTodo.setIsCompleted(false);
     this.repo.saveAndFlush(createdTodo);
     return createdTodo;
   }

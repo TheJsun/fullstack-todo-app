@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -30,7 +31,7 @@ public class Todo {
   private String description;
 
   @Column
-  private Date dueDate;
+  private LocalDate dueDate;
 
   @Column
   private Boolean isCompleted;
@@ -46,12 +47,8 @@ public class Todo {
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "categories_id", nullable = true)
+  @JoinColumn(name = "categories_id", nullable = false)
   private Category category;
-
-  //   @ManyToOne(fetch = FetchType.LAZY)
-  //   @JoinColumn(name = "categories_id", nullable = false)
-  //   private Category category;
 
   public Long getId() {
     return id;
@@ -77,11 +74,11 @@ public class Todo {
     this.description = description;
   }
 
-  public Date getDueDate() {
+  public LocalDate getDueDate() {
     return dueDate;
   }
 
-  public void setDueDate(Date dueDate) {
+  public void setDueDate(LocalDate dueDate) {
     this.dueDate = dueDate;
   }
 
