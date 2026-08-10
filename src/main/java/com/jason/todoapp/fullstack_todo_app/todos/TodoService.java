@@ -5,7 +5,6 @@ import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.CreateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;

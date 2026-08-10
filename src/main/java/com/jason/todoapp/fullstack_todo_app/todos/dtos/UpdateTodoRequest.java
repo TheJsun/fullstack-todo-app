@@ -1,10 +1,8 @@
 package com.jason.todoapp.fullstack_todo_app.todos.dtos;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import java.time.LocalDate;
-import org.hibernate.sql.Update;
 
 public class UpdateTodoRequest {
 
