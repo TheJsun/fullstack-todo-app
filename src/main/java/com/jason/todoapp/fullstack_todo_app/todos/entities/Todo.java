@@ -38,11 +38,11 @@ public class Todo {
 
   @Column
   @CreationTimestamp
-  private Date createdAt;
+  private LocalDate createdAt;
 
   @PrePersist
   public void onCreate() {
-    Date timestamp = new Date();
+    LocalDate timestamp = LocalDate.now();
     this.createdAt = timestamp;
   }
 
@@ -90,11 +90,11 @@ public class Todo {
     this.isCompleted = isCompleted;
   }
 
-  public Date getCreatedAt() {
+  public LocalDate getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(Date createdAt) {
+  public void setCreatedAt(LocalDate createdAt) {
     this.createdAt = createdAt;
   }
 

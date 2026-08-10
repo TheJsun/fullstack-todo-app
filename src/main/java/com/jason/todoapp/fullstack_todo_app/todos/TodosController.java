@@ -1,7 +1,10 @@
 package com.jason.todoapp.fullstack_todo_app.todos;
 
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.CreateTodoRequest;
+import com.jason.todoapp.fullstack_todo_app.todos.dtos.TodoResponse;
+import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,12 +43,21 @@ public class TodosController {
   }
 
   @PatchMapping("/{id}")
-  public String updateTodoById(@PathVariable Long id) {
-    return "updateTodoById was called for id = " + id;
+  public TodoResponse updateTodoById(
+    @PathVariable Long id,
+    @Valid @RequestBody UpdateTodoRequest data
+  ) throws Exception {
+    Todo result = this.todoService
+      .updateById(id, data)
+      .orElseThrow(() -> new Exception("Could not find todo with id + " + id));
+    return TodoResponse.of(result);
   }
 
   @DeleteMapping("/{id}")
-  public String deleteTodoById(@PathVariable Long id) {
-    return "deleteTodoById was called for id = " + id;
+  public void deleteTodoById(@PathVariable Long id) throws Exception {
+    boolean isDeleted = this.todoService.deleteById(id);
+    if (!isDeleted) {
+      throw new Exception("Could not find todo with id of " + id);
+    }
   }
 }

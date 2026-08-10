@@ -3,7 +3,9 @@ package com.jason.todoapp.fullstack_todo_app.todos;
 import com.jason.todoapp.fullstack_todo_app.categories.CategoryService;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.CreateTodoRequest;
+import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
@@ -50,5 +52,31 @@ public class TodoService {
     }
 
     return categoryResult.get();
+  }
+
+  public boolean deleteById(Long id) {
+    Optional<Todo> result = this.findById(id);
+    if (result.isEmpty()) {
+      return false;
+    }
+    this.repo.delete(result.get());
+    return true;
+  }
+
+  public Optional<Todo> updateById(Long id, UpdateTodoRequest data) {
+    Optional<Todo> result = this.findById(id);
+    if (result.isEmpty()) {
+      return result;
+    }
+    Todo foundTodo = result.get();
+    this.mapper.map(data, foundTodo);
+
+    if (data.getCategoryId() != null) {
+      Category foundCategory = resolveCategory(data.getCategoryId());
+      foundTodo.setCategory(foundCategory);
+    }
+
+    this.repo.saveAndFlush(foundTodo);
+    return Optional.of(foundTodo);
   }
 }
