@@ -8,6 +8,7 @@ import com.jason.todoapp.fullstack_todo_app.categories.CategoryRepository;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
 import com.jason.todoapp.fullstack_todo_app.todos.TodoRepository;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.CreateTodoRequest;
+import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -42,7 +43,7 @@ public class TodoEndToEndTest {
     RestAssured.port = this.port;
   }
 
-  //Get Tests
+  //Tests for Getting Todos
 
   @Test
   public void getAllTodos_NoTodosInDB_ReturnOkAndEmptyArray() {
@@ -148,10 +149,38 @@ public class TodoEndToEndTest {
       .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
   }
 
-  //Create Tests
+  //Tests for Creating Todos
 
   @Test
   public void createTodo_validDTO_Created() {
+    Category exampleCategory = new Category();
+    exampleCategory.setName("Example");
+    categoryRepository.saveAndFlush(exampleCategory);
+
+    CreateTodoRequest validDTO = new CreateTodoRequest();
+    validDTO.setTitle("valid title");
+    validDTO.setDescription("valid description");
+    validDTO.setDueDate(LocalDate.of(2026, 12, 12));
+    validDTO.setCategoryId(exampleCategory.getId());
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(validDTO)
+      .when()
+      .post("/todos")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.CREATED.value())
+      .body("title", equalTo("valid title"))
+      .body("description", equalTo("valid description"))
+      .body("dueDate", equalTo("2026-12-12"))
+      .body("category", equalTo("Example"))
+      .body(matchesJsonSchemaInClasspath("schemas/todo-schema.json"));
+  }
+
+  @Test
+  public void createTodo_invalidDTO_BadRequest() {
     HashMap<String, String> data = new HashMap<>();
     data.put("title", "");
     data.put("description", "");
@@ -164,6 +193,176 @@ public class TodoEndToEndTest {
       .then()
       .log()
       .body()
-      .statusCode(HttpStatus.BAD_REQUEST.value());
+      .statusCode(HttpStatus.BAD_REQUEST.value())
+      .body("details.dueDate", hasItem("must not be null"))
+      .body("details.description", hasItem("must not be blank"))
+      .body("details.title", hasItem("must not be blank"))
+      .body("details.categoryId", hasItem("must not be null"))
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
   }
+
+  @Test
+  public void createTodo_missingBody_BadRequest() {
+    given()
+      .contentType(ContentType.JSON)
+      .when()
+      .post("/todos")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.BAD_REQUEST.value())
+      .body("error", equalTo("Bad Request"))
+      .body("message", not(emptyString()))
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
+
+  @Test
+  public void createTodo_categoryNotInDB_BadRequest() {
+    CreateTodoRequest validDTO = new CreateTodoRequest();
+    validDTO.setTitle("valid title");
+    validDTO.setDescription("valid description");
+    validDTO.setDueDate(LocalDate.of(2026, 12, 12));
+    validDTO.setCategoryId(1L);
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(validDTO)
+      .when()
+      .post("/todos")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.UNPROCESSABLE_CONTENT.value())
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
+
+  @Test
+  public void createTodo_invalidCategory_BadRequest() {
+    CreateTodoRequest validDTO = new CreateTodoRequest();
+    validDTO.setTitle("valid title");
+    validDTO.setDescription("valid description");
+    validDTO.setDueDate(LocalDate.of(2026, 12, 12));
+    validDTO.setCategoryId(null);
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(validDTO)
+      .when()
+      .post("/todos")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.BAD_REQUEST.value())
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
+
+  // Tests for Updating Todos
+  @Test
+  public void updateTodo_validDTO_Updated() {
+    Category exampleCategory1 = new Category();
+    exampleCategory1.setName("Example1");
+    categoryRepository.saveAndFlush(exampleCategory1);
+
+    Category exampleCategory2 = new Category();
+    exampleCategory2.setName("Example2");
+    categoryRepository.saveAndFlush(exampleCategory2);
+
+    Todo existingTodo = new Todo();
+    existingTodo.setTitle("Test todo1");
+    existingTodo.setDescription("Test todo1 description");
+    existingTodo.setDueDate(LocalDate.of(2026, 12, 12));
+    existingTodo.setIsCompleted(false);
+    existingTodo.setCategory(exampleCategory1);
+    todoRepository.saveAndFlush(existingTodo);
+
+    UpdateTodoRequest validDTO = new UpdateTodoRequest();
+    validDTO.setTitle("updated title");
+    validDTO.setDescription("updated description");
+    validDTO.setDueDate(LocalDate.of(2027, 11, 13));
+    validDTO.setIsCompleted(true);
+    validDTO.setCategoryId(exampleCategory2.getId());
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(validDTO)
+      .when()
+      .patch("/todos/" + existingTodo.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.OK.value())
+      .body("title", equalTo("updated title"))
+      .body("description", equalTo("updated description"))
+      .body("dueDate", equalTo("2027-11-13"))
+      .body("isCompleted", equalTo(true))
+      .body("category", equalTo("Example2"))
+      .body(matchesJsonSchemaInClasspath("schemas/todo-schema.json"));
+  }
+
+  @Test
+  public void updateTodo_unparseableDTO_BadRequest() {
+    Category exampleCategory = new Category();
+    exampleCategory.setName("Example");
+    categoryRepository.saveAndFlush(exampleCategory);
+
+    Todo existingTodo = new Todo();
+    existingTodo.setTitle("Test todo");
+    existingTodo.setDescription("Test todo description");
+    existingTodo.setDueDate(LocalDate.of(2026, 12, 12));
+    existingTodo.setIsCompleted(false);
+    existingTodo.setCategory(exampleCategory);
+    todoRepository.saveAndFlush(existingTodo);
+
+    HashMap<String, String> data = new HashMap<>();
+    data.put("title", "");
+    data.put("description", "");
+    data.put("dueDate", "invalid dueDate");
+    data.put("isCompleted", "invalid isCompleted");
+    data.put("categoryId", "invalid categoryId");
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(data)
+      .when()
+      .patch("/todos/" + existingTodo.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.BAD_REQUEST.value())
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
+
+  @Test
+  public void updateTodo_invalidDTO_BadRequest() {
+    Category exampleCategory = new Category();
+    exampleCategory.setName("Example");
+    categoryRepository.saveAndFlush(exampleCategory);
+
+    Todo existingTodo = new Todo();
+    existingTodo.setTitle("Test todo");
+    existingTodo.setDescription("Test todo description");
+    existingTodo.setDueDate(LocalDate.of(2026, 12, 12));
+    existingTodo.setIsCompleted(false);
+    existingTodo.setCategory(exampleCategory);
+    todoRepository.saveAndFlush(existingTodo);
+
+    HashMap<String, String> data = new HashMap<>();
+    data.put("title", "");
+    data.put("description", "");
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(data)
+      .when()
+      .patch("/todos/" + existingTodo.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.BAD_REQUEST.value())
+      .body("details.description", hasItem("Description cannot be empty"))
+      .body("details.title", hasItem("Title cannot be empty"))
+      .body(matchesJsonSchemaInClasspath("schemas/todo-list-schema.json"));
+  }
+
+  // Tests for Deleting Todos
 }

@@ -1,8 +1,9 @@
 package com.jason.todoapp.fullstack_todo_app.todos;
 
-import com.jason.todoapp.fullstack_todo_app.categories.CategoryService;
+import com.jason.todoapp.fullstack_todo_app.categories.CategoryRepository;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
 import com.jason.todoapp.fullstack_todo_app.common.exceptions.NotFoundException;
+import com.jason.todoapp.fullstack_todo_app.common.exceptions.UnprocessableContentException;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.CreateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
@@ -15,16 +16,16 @@ public class TodoService {
 
   private final TodoRepository repo;
   private final ModelMapper mapper;
-  private final CategoryService categoryService;
+  private final CategoryRepository categoryRepository;
 
   public TodoService(
     TodoRepository repo,
     ModelMapper mapper,
-    CategoryService categoryService
+    CategoryRepository categoryRepository
   ) {
     this.repo = repo;
     this.mapper = mapper;
-    this.categoryService = categoryService;
+    this.categoryRepository = categoryRepository;
   }
 
   public List<Todo> findAll() {
@@ -44,12 +45,15 @@ public class TodoService {
     Category foundCategory = resolveCategory(data.getCategoryId());
     createdTodo.setCategory(foundCategory);
     createdTodo.setIsCompleted(false);
-    this.repo.saveAndFlush(createdTodo);
-    return createdTodo;
+    return this.repo.saveAndFlush(createdTodo);
   }
 
   private Category resolveCategory(Long id) {
-    Category categoryResult = this.categoryService.findById(id);
+    Category categoryResult = this.categoryRepository
+      .findById(id)
+      .orElseThrow(() ->
+        new UnprocessableContentException("No category exists with id = " + id)
+      );
     return categoryResult;
   }
 
