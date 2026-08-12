@@ -3,9 +3,8 @@ package com.jason.todoapp.fullstack_todo_app.categories;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.CreateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.UpdateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
-import jakarta.persistence.EntityNotFoundException;
+import com.jason.todoapp.fullstack_todo_app.common.exceptions.NotFoundException;
 import java.util.List;
-import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class CategoryService {
     return this.repo
       .findById(id)
       .orElseThrow(() ->
-        new EntityNotFoundException("Could not find category with id = " + id)
+        new NotFoundException("Could not find category with id = " + id)
       );
   }
 
