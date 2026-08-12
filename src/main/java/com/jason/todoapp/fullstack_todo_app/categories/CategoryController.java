@@ -5,6 +5,8 @@ import com.jason.todoapp.fullstack_todo_app.categories.dtos.CreateCategoryReques
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.UpdateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,34 +27,35 @@ public class CategoryController {
   }
 
   @GetMapping()
-  public List<Category> getAllCategories() {
-    return this.categoryService.findAll();
+  public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+    return ResponseEntity.ok(
+      CategoryResponse.of(this.categoryService.findAll())
+    );
   }
 
   @PostMapping
-  public Category createCategory(@RequestBody CreateCategoryRequest data) {
+  public ResponseEntity<CategoryResponse> createCategory(
+    @RequestBody CreateCategoryRequest data
+  ) {
     Category createdCategory = this.categoryService.create(data);
-    return createdCategory;
+    return ResponseEntity.status(HttpStatus.CREATED).body(
+      CategoryResponse.of(createdCategory)
+    );
   }
 
   @PatchMapping("/{id}")
-  public CategoryResponse updateCategory(
+  public ResponseEntity<CategoryResponse> updateCategory(
     @PathVariable Long id,
     @RequestBody UpdateCategoryRequest data
-  ) throws Exception {
-    Category result = this.categoryService
-      .updateById(id, data)
-      .orElseThrow(() ->
-        new Exception("Could not find category with id = " + id)
-      );
-    return CategoryResponse.of(result);
+  ) {
+    Category result = this.categoryService.updateById(id, data);
+    return ResponseEntity.ok(CategoryResponse.of(result));
   }
 
   @DeleteMapping("/{id}")
-  public void deleteCategoryById(@PathVariable Long id) throws Exception {
-    boolean isDeleted = this.categoryService.deleteById(id);
-    if (!isDeleted) {
-      throw new Exception("Could not find category with id of " + id);
-    }
+  public ResponseEntity<Void> deleteCategoryById(@PathVariable Long id)
+    throws Exception {
+    this.categoryService.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 }

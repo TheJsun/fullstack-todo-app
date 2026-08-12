@@ -3,6 +3,7 @@ package com.jason.todoapp.fullstack_todo_app.categories;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.CreateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.UpdateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
@@ -19,12 +20,12 @@ public class CategoryService {
     this.mapper = mapper;
   }
 
-  public Optional<Category> findById(Long id) {
-    return this.repo.findById(id);
-  }
-
-  public Optional<Category> findByName(String name) {
-    return this.repo.findByName(name);
+  public Category findById(Long id) {
+    return this.repo
+      .findById(id)
+      .orElseThrow(() ->
+        new EntityNotFoundException("Could not find category with id = " + id)
+      );
   }
 
   public List<Category> findAll() {
@@ -38,24 +39,17 @@ public class CategoryService {
     return createdCategory;
   }
 
-  public Optional<Category> updateById(Long id, UpdateCategoryRequest data) {
-    Optional<Category> result = this.findById(id);
-    if (result.isEmpty()) {
-      return result;
-    }
-    Category foundCategory = result.get();
-    this.mapper.map(data, foundCategory);
-    this.repo.saveAndFlush(foundCategory);
+  public Category updateById(Long id, UpdateCategoryRequest data) {
+    Category result = this.findById(id);
 
-    return Optional.of(foundCategory);
+    this.mapper.map(data, result);
+    this.repo.saveAndFlush(result);
+
+    return result;
   }
 
-  public boolean deleteById(Long id) {
-    Optional<Category> result = this.findById(id);
-    if (result.isEmpty()) {
-      return false;
-    }
-    this.repo.deleteById(id);
-    return true;
+  public void deleteById(Long id) {
+    Category result = this.findById(id);
+    this.repo.delete(result);
   }
 }

@@ -7,7 +7,6 @@ import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -50,11 +49,7 @@ public class TodoService {
   }
 
   private Category resolveCategory(Long id) {
-    Category categoryResult = this.categoryService
-      .findById(id)
-      .orElseThrow(() ->
-        new EntityNotFoundException("no category was found with this id")
-      );
+    Category categoryResult = this.categoryService.findById(id);
     return categoryResult;
   }
 
