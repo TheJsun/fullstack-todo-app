@@ -6,7 +6,8 @@ import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,37 +28,41 @@ public class TodosController {
   }
 
   @GetMapping()
-  public List<Todo> findAllTodos() {
-    return this.todoService.findAll();
+  public ResponseEntity<List<TodoResponse>> findAllTodos() {
+    List<Todo> allTodos = this.todoService.findAll();
+    return ResponseEntity.ok(TodoResponse.of(allTodos));
   }
 
   @GetMapping("/{id}")
-  public Optional<Todo> getTodoById(@PathVariable Long id) {
-    return this.todoService.findById(id);
+  public ResponseEntity<TodoResponse> getTodoById(@PathVariable Long id)
+    throws Exception {
+    Todo result = this.todoService.findById(id);
+
+    return ResponseEntity.ok(TodoResponse.of(result));
   }
 
   @PostMapping()
-  public Todo createTodo(@RequestBody CreateTodoRequest data) {
+  public ResponseEntity<TodoResponse> createTodo(
+    @RequestBody CreateTodoRequest data
+  ) {
     Todo createdTodo = this.todoService.create(data);
-    return createdTodo;
+    return ResponseEntity.status(HttpStatus.CREATED).body(
+      TodoResponse.of(createdTodo)
+    );
   }
 
   @PatchMapping("/{id}")
-  public TodoResponse updateTodoById(
+  public ResponseEntity<TodoResponse> updateTodoById(
     @PathVariable Long id,
     @Valid @RequestBody UpdateTodoRequest data
-  ) throws Exception {
-    Todo result = this.todoService
-      .updateById(id, data)
-      .orElseThrow(() -> new Exception("Could not find todo with id + " + id));
-    return TodoResponse.of(result);
+  ) {
+    Todo result = this.todoService.updateById(id, data);
+    return ResponseEntity.ok(TodoResponse.of(result));
   }
 
   @DeleteMapping("/{id}")
-  public void deleteTodoById(@PathVariable Long id) throws Exception {
-    boolean isDeleted = this.todoService.deleteById(id);
-    if (!isDeleted) {
-      throw new Exception("Could not find todo with id of " + id);
-    }
+  public ResponseEntity<Void> deleteTodoById(@PathVariable Long id) {
+    this.todoService.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 }

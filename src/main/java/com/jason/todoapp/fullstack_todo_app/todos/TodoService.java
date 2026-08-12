@@ -5,6 +5,7 @@ import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.CreateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
@@ -31,8 +32,12 @@ public class TodoService {
     return this.repo.findAll();
   }
 
-  public Optional<Todo> findById(Long id) {
-    return this.repo.findById(id);
+  public Todo findById(Long id) {
+    return this.repo
+      .findById(id)
+      .orElseThrow(() ->
+        new EntityNotFoundException("Could not find Todo with id = " + id)
+      );
   }
 
   public Todo create(CreateTodoRequest data) {
@@ -45,37 +50,30 @@ public class TodoService {
   }
 
   private Category resolveCategory(Long id) {
-    Optional<Category> categoryResult = this.categoryService.findById(id);
-    if (categoryResult.isEmpty()) {
-      throw new Error("no category was found with this id");
-    }
-
-    return categoryResult.get();
+    Category categoryResult = this.categoryService
+      .findById(id)
+      .orElseThrow(() ->
+        new EntityNotFoundException("no category was found with this id")
+      );
+    return categoryResult;
   }
 
-  public boolean deleteById(Long id) {
-    Optional<Todo> result = this.findById(id);
-    if (result.isEmpty()) {
-      return false;
-    }
-    this.repo.delete(result.get());
-    return true;
+  public void deleteById(Long id) {
+    Todo result = this.findById(id);
+    this.repo.delete(result);
   }
 
-  public Optional<Todo> updateById(Long id, UpdateTodoRequest data) {
-    Optional<Todo> result = this.findById(id);
-    if (result.isEmpty()) {
-      return result;
-    }
-    Todo foundTodo = result.get();
-    this.mapper.map(data, foundTodo);
+  public Todo updateById(Long id, UpdateTodoRequest data) {
+    Todo result = this.findById(id);
+
+    this.mapper.map(data, result);
 
     if (data.getCategoryId() != null) {
       Category foundCategory = resolveCategory(data.getCategoryId());
-      foundTodo.setCategory(foundCategory);
+      result.setCategory(foundCategory);
     }
 
-    this.repo.saveAndFlush(foundTodo);
-    return Optional.of(foundTodo);
+    this.repo.saveAndFlush(result);
+    return result;
   }
 }
