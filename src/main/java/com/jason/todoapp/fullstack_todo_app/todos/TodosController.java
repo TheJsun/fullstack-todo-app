@@ -43,7 +43,7 @@ public class TodosController {
 
   @PostMapping()
   public ResponseEntity<TodoResponse> createTodo(
-    @RequestBody CreateTodoRequest data
+    @Valid @RequestBody CreateTodoRequest data
   ) {
     Todo createdTodo = this.todoService.create(data);
     return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -53,7 +53,7 @@ public class TodosController {
 
   @PatchMapping("/{id}")
   public ResponseEntity<TodoResponse> updateTodoById(
-    @PathVariable Long id,
+    @Valid @PathVariable Long id,
     @Valid @RequestBody UpdateTodoRequest data
   ) {
     Todo result = this.todoService.updateById(id, data);
