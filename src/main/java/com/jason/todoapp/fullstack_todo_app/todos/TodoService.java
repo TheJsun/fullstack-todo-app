@@ -2,10 +2,10 @@ package com.jason.todoapp.fullstack_todo_app.todos;
 
 import com.jason.todoapp.fullstack_todo_app.categories.CategoryService;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
+import com.jason.todoapp.fullstack_todo_app.common.exceptions.NotFoundException;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.CreateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.dtos.UpdateTodoRequest;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class TodoService {
     return this.repo
       .findById(id)
       .orElseThrow(() ->
-        new EntityNotFoundException("Could not find Todo with id = " + id)
+        new NotFoundException("Could not find Todo with id = " + id)
       );
   }
 
