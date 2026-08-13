@@ -17,6 +17,13 @@
     },
     "path": {
       "type": "string"
+    },
+    "details": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
     }
   },
   "required": ["timestamp", "status", "error", "message", "path"]

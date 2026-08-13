@@ -268,8 +268,8 @@ public class TodoEndToEndTest {
     categoryRepository.saveAndFlush(exampleCategory2);
 
     Todo existingTodo = new Todo();
-    existingTodo.setTitle("Test todo1");
-    existingTodo.setDescription("Test todo1 description");
+    existingTodo.setTitle("Test todo");
+    existingTodo.setDescription("Test todo description");
     existingTodo.setDueDate(LocalDate.of(2026, 12, 12));
     existingTodo.setIsCompleted(false);
     existingTodo.setCategory(exampleCategory1);
@@ -361,7 +361,7 @@ public class TodoEndToEndTest {
       .statusCode(HttpStatus.BAD_REQUEST.value())
       .body("details.description", hasItem("Description cannot be empty"))
       .body("details.title", hasItem("Title cannot be empty"))
-      .body(matchesJsonSchemaInClasspath("schemas/todo-list-schema.json"));
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
   }
 
   // Tests for Deleting Todos
