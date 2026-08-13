@@ -365,6 +365,32 @@ public class TodoEndToEndTest {
       .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
   }
 
+  @Test
+  public void updateTodo_todoNotInDB_NotFound() {
+    Category exampleCategory = new Category();
+    exampleCategory.setName("Example");
+    categoryRepository.saveAndFlush(exampleCategory);
+
+    UpdateTodoRequest validDTO = new UpdateTodoRequest();
+    validDTO.setTitle("updated title");
+    validDTO.setDescription("updated description");
+    validDTO.setDueDate(LocalDate.of(2027, 11, 13));
+    validDTO.setIsCompleted(true);
+    validDTO.setCategoryId(exampleCategory.getId());
+
+    given()
+      .contentType(ContentType.JSON)
+      .body(validDTO)
+      .when()
+      .patch("/todos/1")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.NOT_FOUND.value())
+      .body("message", equalTo("Could not find Todo with id = 1"))
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
+
   // Tests for Deleting Todos
   @Test
   public void deleteTodo_todoInDB_Deleted() {
