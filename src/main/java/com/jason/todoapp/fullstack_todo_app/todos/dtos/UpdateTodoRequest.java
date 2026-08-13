@@ -9,7 +9,7 @@ public class UpdateTodoRequest {
   @Pattern(regexp = ".*\\S.*", message = "Title cannot be empty")
   private String title;
 
-  @Pattern(regexp = ".*\\S.*", message = "description cannot be empty")
+  @Pattern(regexp = ".*\\S.*", message = "Description cannot be empty")
   private String description;
 
   private LocalDate dueDate;
@@ -45,19 +45,19 @@ public class UpdateTodoRequest {
     this.dueDate = dueDate;
   }
 
-  public boolean isCompleted() {
-    return isCompleted;
-  }
-
-  public void setCompleted(boolean isCompleted) {
-    this.isCompleted = isCompleted;
-  }
-
   public Long getCategoryId() {
     return categoryId;
   }
 
   public void setCategoryId(Long categoryId) {
     this.categoryId = categoryId;
+  }
+
+  public boolean getIsCompleted() {
+    return isCompleted;
+  }
+
+  public void setIsCompleted(boolean isCompleted) {
+    this.isCompleted = isCompleted;
   }
 }

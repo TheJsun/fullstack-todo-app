@@ -4,6 +4,7 @@ import com.jason.todoapp.fullstack_todo_app.categories.dtos.CategoryResponse;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.CreateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.UpdateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class CategoryController {
 
   @PostMapping
   public ResponseEntity<CategoryResponse> createCategory(
-    @RequestBody CreateCategoryRequest data
+    @Valid @RequestBody CreateCategoryRequest data
   ) {
     Category createdCategory = this.categoryService.create(data);
     return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -45,7 +46,7 @@ public class CategoryController {
 
   @PatchMapping("/{id}")
   public ResponseEntity<CategoryResponse> updateCategory(
-    @PathVariable Long id,
+    @Valid @PathVariable Long id,
     @RequestBody UpdateCategoryRequest data
   ) {
     Category result = this.categoryService.updateById(id, data);

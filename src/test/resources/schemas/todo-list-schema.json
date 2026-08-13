@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "number"
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "dueDate": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "isCompleted": {
+        "type": "boolean"
+      },
+      "category": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "title",
+      "description",
+      "dueDate",
+      "createdAt",
+      "isCompleted",
+      "category"
+    ]
+  }
+}

@@ -2,14 +2,58 @@ package com.jason.todoapp.fullstack_todo_app.common;
 
 import com.jason.todoapp.fullstack_todo_app.common.dtos.ApiErrorResponse;
 import com.jason.todoapp.fullstack_todo_app.common.exceptions.NotFoundException;
+import com.jason.todoapp.fullstack_todo_app.common.exceptions.UnprocessableContentException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ApiErrorResponse> handleMethodArgumentTypeMismatchException(
+    MethodArgumentTypeMismatchException ex,
+    HttpServletRequest req
+  ) {
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.BAD_REQUEST,
+      ex.getMessage(),
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(
+    MethodArgumentNotValidException ex,
+    HttpServletRequest req
+  ) {
+    Map<String, ArrayList<String>> errors = new HashMap<>();
+
+    for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+      String field = fieldError.getField();
+      String message = fieldError.getDefaultMessage();
+
+      errors.computeIfAbsent(field, k -> new ArrayList<>()).add(message);
+    }
+    System.out.println("Caught: " + ex.getClass().getName());
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.BAD_REQUEST,
+      ex.getMessage(),
+      req.getRequestURI(),
+      errors
+    );
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
 
   @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<ApiErrorResponse> handleNotFoundException(
@@ -22,5 +66,47 @@ public class GlobalExceptionHandler {
       req.getRequestURI()
     );
     return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ApiErrorResponse> handleHttpMessageNotReadableException(
+    HttpMessageNotReadableException ex,
+    HttpServletRequest req
+  ) {
+    System.out.println("Caught: " + ex.getClass().getName());
+
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.BAD_REQUEST,
+      ex.getMessage(),
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(UnprocessableContentException.class)
+  public ResponseEntity<ApiErrorResponse> handleUnprocessableContentException(
+    UnprocessableContentException ex,
+    HttpServletRequest req
+  ) {
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.UNPROCESSABLE_CONTENT,
+      ex.getMessage(),
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_CONTENT);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ApiErrorResponse> handleUnexpected(
+    Exception ex,
+    HttpServletRequest req
+  ) {
+    System.out.println("Unhandled exception: " + ex.getClass().getName());
+    ApiErrorResponse response = ApiErrorResponse.of(
+      HttpStatus.UNPROCESSABLE_CONTENT,
+      ex.getMessage(),
+      req.getRequestURI()
+    );
+    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
