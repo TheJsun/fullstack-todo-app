@@ -217,7 +217,7 @@ public class TodoEndToEndTest {
   }
 
   @Test
-  public void createTodo_categoryNotInDB_BadRequest() {
+  public void createTodo_categoryNotInDB_UnprocessableContent() {
     CreateTodoRequest validDTO = new CreateTodoRequest();
     validDTO.setTitle("valid title");
     validDTO.setDescription("valid description");
@@ -253,6 +253,7 @@ public class TodoEndToEndTest {
       .log()
       .body()
       .statusCode(HttpStatus.BAD_REQUEST.value())
+      .body("details.categoryId", hasItem("must not be null"))
       .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
   }
 
@@ -386,13 +387,27 @@ public class TodoEndToEndTest {
       .log()
       .body()
       .statusCode(HttpStatus.NO_CONTENT.value());
+
+    // Now verifying that the todo is no longer in the repository
+    given()
+      .when()
+      .get("/todos/" + existingTodo.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.NOT_FOUND.value())
+      .body(
+        "message",
+        equalTo("Could not find Todo with id = " + existingTodo.getId())
+      )
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
   }
 
   @Test
   public void deleteTodo_todoNotInDB_NotFound() {
     given()
       .when()
-      .delete("todos/1")
+      .delete("/todos/1")
       .then()
       .log()
       .body()
