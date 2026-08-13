@@ -365,4 +365,38 @@ public class TodoEndToEndTest {
   }
 
   // Tests for Deleting Todos
+  @Test
+  public void deleteTodo_todoInDB_Deleted() {
+    Category exampleCategory = new Category();
+    exampleCategory.setName("Example");
+    categoryRepository.saveAndFlush(exampleCategory);
+
+    Todo existingTodo = new Todo();
+    existingTodo.setTitle("Test todo");
+    existingTodo.setDescription("Test todo description");
+    existingTodo.setDueDate(LocalDate.of(2026, 12, 12));
+    existingTodo.setIsCompleted(false);
+    existingTodo.setCategory(exampleCategory);
+    todoRepository.saveAndFlush(existingTodo);
+
+    given()
+      .when()
+      .delete("/todos/" + existingTodo.getId())
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.NO_CONTENT.value());
+  }
+
+  @Test
+  public void deleteTodo_todoNotInDB_NotFound() {
+    given()
+      .when()
+      .delete("todos/1")
+      .then()
+      .log()
+      .body()
+      .statusCode(HttpStatus.NOT_FOUND.value())
+      .body(matchesJsonSchemaInClasspath("schemas/api-error-schema.json"));
+  }
 }
