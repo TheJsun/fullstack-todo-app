@@ -8,14 +8,12 @@ import com.jason.todoapp.fullstack_todo_app.categories.CategoryRepository;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.CreateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.dtos.UpdateCategoryRequest;
 import com.jason.todoapp.fullstack_todo_app.categories.entities.Category;
-import com.jason.todoapp.fullstack_todo_app.todos.TodoRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.WebProperties.Resources.Chain.Strategy.Content;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -33,9 +31,6 @@ public class CategoryEndToEndTest {
 
   @Autowired
   private CategoryRepository categoryRepository;
-
-  @Autowired
-  private TodoRepository todoRepository;
 
   @BeforeEach
   public void setup() {
