@@ -47,7 +47,7 @@ public class CategoryController {
   @PatchMapping("/{id}")
   public ResponseEntity<CategoryResponse> updateCategory(
     @Valid @PathVariable Long id,
-    @RequestBody UpdateCategoryRequest data
+    @Valid @RequestBody UpdateCategoryRequest data
   ) {
     Category result = this.categoryService.updateById(id, data);
     return ResponseEntity.ok(CategoryResponse.of(result));

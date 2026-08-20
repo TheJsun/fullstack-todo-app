@@ -32,8 +32,7 @@ public class CategoryService {
   }
 
   public Category create(CreateCategoryRequest data) {
-    Category createdCategory = new Category();
-    this.mapper.map(data, createdCategory);
+    Category createdCategory = this.mapper.map(data, Category.class);
     this.repo.saveAndFlush(createdCategory);
     return createdCategory;
   }

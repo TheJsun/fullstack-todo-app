@@ -20,7 +20,7 @@ public class ModelMapperConfiguration {
     mapper.addConverter(
       ctx -> {
         String source = ctx.getSource();
-        return source == null ? null : source.trim().replaceAll("//s+", " ");
+        return source == null ? null : source.trim().replaceAll("\\s+", " ");
       },
       String.class,
       String.class
