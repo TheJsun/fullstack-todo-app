@@ -1,5 +1,6 @@
 package com.jason.todoapp.fullstack_todo_app.todos.dtos;
 
+import com.jason.todoapp.fullstack_todo_app.categories.dtos.CategoryResponse;
 import com.jason.todoapp.fullstack_todo_app.todos.entities.Todo;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +12,7 @@ public record TodoResponse(
   LocalDate dueDate,
   LocalDate createdAt,
   Boolean isCompleted,
-  String category
+  CategoryResponse category
 ) {
   public static TodoResponse of(Todo todo) {
     return new TodoResponse(
@@ -21,7 +22,7 @@ public record TodoResponse(
       todo.getDueDate(),
       todo.getCreatedAt(),
       todo.getIsCompleted(),
-      todo.getCategory().getName()
+      CategoryResponse.of(todo.getCategory())
     );
   }
 
