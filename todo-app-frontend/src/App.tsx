@@ -1,6 +1,5 @@
-import "./App.module.scss";
+import classes from "./App.module.scss";
 import { useState } from "react";
-import CategoryForm from "./components/categories/CategoryForm/CategoryForm";
 import Header from "./components/Header/Header";
 import TodoForm from "./components/todos/TodoForm/TodoForm";
 import type { TodoResponse } from "./schemas/todo-schemas";
@@ -40,13 +39,13 @@ function App() {
   };
 
   return (
-    <>
+    <main className={classes.main}>
       <Header />
+      <TodoForm categories={categories} onTodoCreated={onTodoCreated} />
       <CategoryList
         categories={categories}
         onCategoryCreated={onCategoryCreated}
       />
-      <TodoForm categories={categories} onTodoCreated={onTodoCreated} />
       <TodoList
         todos={todos}
         categories={categories}
@@ -54,7 +53,7 @@ function App() {
         onToggleComplete={handleToggleComplete}
         onTodoUpdated={handleTodoUpdated}
       />
-    </>
+    </main>
   );
 }
 

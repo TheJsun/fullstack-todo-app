@@ -1,22 +1,25 @@
 :root {
-  --card-bg: #fdf7ea;
-  --cream-100: #fbeacb;
-  --cream-200: #f6dcae;
-  --amber-500: #e08a3c;
-  --amber-700: #a8571b;
-  --ink-900: #4a3728;
-  --ink-500: #8a6c4d;
-  --ink-300: #b39a7b;
-  --border: #ecd6ac;
-  --danger: #c0492e;
+  --bg: #fdf6e9;
+  --surface: #ffffff;
+  --accent: #dd8b3e;
+  --accent-hv: #d17f31;
+  --accent-ac: #c1731f;
+  --accent-dk: #9c5c1e;
 
-  --radius-card: 24px;
-  --radius-control: 14px;
-  --radius-pill: 999px;
-  --space-1: 8px;
-  --space-2: 12px;
-  --space-3: 16px;
-  --space-4: 22px;
-  --touch: 44px;
-  --shadow-card: 0 16px 36px -26px rgba(120, 74, 25, 0.6);
+  --ink: #40342a;
+  --ink-soft: #7d6a53;
+  --ink-muted: #a08a6c;
+  --ink-done: #b0a08a;
+  --ink-faint: #b7a288;
+
+  --line: #ecdec6;
+  --line-input: #e4d5ba;
+  --line-check: #d3bb96;
+  --danger: #b5543a;
+
+  --radius: 8px;
+  --radius-sm: 5px;
+  --radius-btn: 7px;
+
+  --font: "Nunito", system-ui, sans-serif;
 }

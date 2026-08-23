@@ -1,8 +1,8 @@
 import type { CategoryResponse } from "../../../schemas/category-schemas";
 import { useState } from "react";
-import CategoryCard from "../CategoryCard/CategoryCard";
 import CategoryForm from "../CategoryForm/CategoryForm";
 import classes from "./CategoryList.module.scss";
+import Button from "../../Button/Button";
 
 interface CategoryListProps {
   categories: CategoryResponse[];
@@ -29,29 +29,25 @@ export default function CategoryList({
   };
 
   return (
-    <main className={classes.categories}>
-      <div className={classes.heading}>
-        <p>CATEGORIES</p>
-        <button type="button" onClick={onToggleCategoryForm}>
-          + New
-        </button>
-      </div>
+    <>
+      <section className={`${classes["category-list"]}`}>
+        {categories.map((c) => (
+          <button className={classes["category-card"]}>{c.name}</button>
+        ))}
+
+        <Button className="right-side" onClick={onToggleCategoryForm}>
+          Add Category
+        </Button>
+      </section>
+
       {showCategoryForm && (
-        <div>
+        <div className={classes["category-form"]}>
           <CategoryForm
             onCategoryCreated={onSubmitCategory}
             onCancel={onCancel}
           />
         </div>
       )}
-
-      <ul>
-        {categories.map((c) => (
-          <li key={c.id}>
-            <CategoryCard category={c} />
-          </li>
-        ))}
-      </ul>
-    </main>
+    </>
   );
 }

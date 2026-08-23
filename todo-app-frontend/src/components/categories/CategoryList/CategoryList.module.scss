@@ -1,15 +1,40 @@
-.categories {
+.category-list {
   display: flex;
-  flex-direction: column;
-  background-color: var(--card-bg);
-  width: 100%;
-  height: 10dvh;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 26px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
 }
 
-.heading {
+.category-card {
+  height: 32px;
+  padding: 0 12px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
+  border: none;
+  border-radius: var(--radius-btn);
+  background: #f4e8d3;
+  color: var(--ink-soft);
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background: #eeddc0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.category-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
   width: 100%;
-  height: 40%;
 }

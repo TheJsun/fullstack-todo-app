@@ -1,7 +1,17 @@
-.title {
+.header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 1em;
+  flex-direction: column;
+
+  &__title {
+    margin: 0;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  &__date {
+    margin-top: 6px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #9a8367;
+  }
 }

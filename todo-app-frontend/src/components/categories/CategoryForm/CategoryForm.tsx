@@ -5,6 +5,7 @@ import type {
 } from "../../../schemas/category-schemas";
 import classes from "./CategoryForm.module.scss";
 import { createCategory } from "../../../services/category-services";
+import Button from "../../Button/Button";
 
 function toCreateCategoryRequest(
   form: CategoryFormState,
@@ -47,17 +48,18 @@ export default function CategoryForm({
 
   return (
     <>
-      <form className={classes.TodoForm} onSubmit={handleSubmit}>
-        <label>Category name</label>
+      <form className={classes.form} onSubmit={handleSubmit}>
         <input
+          className={classes["category-form"]}
           name="name"
           value={categoryFormData.name}
           onChange={handleChange}
+          placeholder="Category name"
         />
-        <button type="submit">Add</button>
-        <button type="button" onClick={onCancel}>
-          Cancel
-        </button>
+        <Button type="submit">Add</Button>
+        <Button variant="delete" onClick={onCancel}>
+          &times;
+        </Button>
       </form>
     </>
   );

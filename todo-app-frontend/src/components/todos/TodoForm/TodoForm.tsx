@@ -5,6 +5,7 @@ import type {
   UpdateTodoRequest,
 } from "../../../schemas/todo-schemas";
 import { createTodo, updateTodo } from "../../../services/todo-services";
+import Button from "../../Button/Button";
 import classes from "./TodoForm.module.scss";
 import React, { useState } from "react";
 
@@ -96,31 +97,18 @@ export default function TodoForm({
   };
 
   return (
-    <>
-      <form className={classes.TodoForm} onSubmit={handleSubmit}>
-        <label>Todo Name</label>
+    <form className={classes.TodoForm} onSubmit={handleSubmit}>
+      <div className={classes.TodoForm__row}>
         <input
+          className={`${classes.TodoForm__title} ${classes.field}`}
           name="title"
           value={todoFormData.title}
           onChange={handleChange}
+          placeholder="Task name..."
         />
 
-        <label>Todo Description</label>
-        <input
-          name="description"
-          value={todoFormData.description}
-          onChange={handleChange}
-        />
-
-        <label>Todo Duedate</label>
-        <input
-          type="date"
-          name="dueDate"
-          value={todoFormData.dueDate}
-          onChange={handleChange}
-        />
-        <label>Todo Category</label>
         <select
+          className={`${classes.TodoForm__category} ${classes.field}`}
           name="categoryId"
           value={todoFormData.categoryId}
           onChange={handleChange}
@@ -135,13 +123,32 @@ export default function TodoForm({
             </option>
           ))}
         </select>
-        <button type="submit">{existingTodo ? "Save" : "Add Task"}</button>
+
+        <input
+          className={`${classes.TodoForm__dueDate} ${classes.field}`}
+          type="date"
+          name="dueDate"
+          value={todoFormData.dueDate}
+          onChange={handleChange}
+        />
+      </div>
+
+      <input
+        className={`${classes.TodoForm__desc} ${classes.field}`}
+        name="description"
+        value={todoFormData.description}
+        onChange={handleChange}
+        placeholder="Add a short description"
+      />
+
+      <div className={classes.buttons}>
+        <Button type="submit">{existingTodo ? "Save" : "Add Task"}</Button>
         {onCancel && (
-          <button type="button" onClick={onCancel}>
-            Cancel
-          </button>
+          <Button variant="delete" onClick={onCancel}>
+            x
+          </Button>
         )}
-      </form>
-    </>
+      </div>
+    </form>
   );
 }

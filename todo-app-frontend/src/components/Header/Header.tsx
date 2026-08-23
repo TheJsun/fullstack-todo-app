@@ -10,9 +10,9 @@ export default function Header() {
   });
 
   return (
-    <main className={classes.title}>
-      <h1>Today's Tasks</h1>
-      <p>{formatted}</p>
-    </main>
+    <header className={classes.header}>
+      <h1 className={classes.header__title}>Today's Tasks</h1>
+      <p className={classes.header__date}>{formatted}</p>
+    </header>
   );
 }

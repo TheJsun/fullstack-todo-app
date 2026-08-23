@@ -7,7 +7,17 @@
 }
 
 body {
-  background-color: #fbeacb;
-  font-family: system-ui, sans-serif;
-  color: #1a1a1a;
+  margin: 0;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--ink);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 620px;
+  margin-inline: auto;
+  padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 24px);
 }
