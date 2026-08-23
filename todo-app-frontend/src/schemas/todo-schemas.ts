@@ -16,3 +16,11 @@ export interface CreateTodoRequest {
   dueDate: string;
   categoryId: number;
 }
+
+export interface UpdateTodoRequest {
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  isCompleted?: boolean;
+  categoryId?: number;
+}
