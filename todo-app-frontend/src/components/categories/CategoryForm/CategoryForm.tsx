@@ -14,13 +14,17 @@ function toCreateCategoryRequest(
 
 interface CategoryFormProps {
   onCategoryCreated: (category: CategoryResponse) => void;
+  onCancel?: () => void;
 }
 
 interface CategoryFormState {
   name: string;
 }
 
-export default function CategoryForm({ onCategoryCreated }: CategoryFormProps) {
+export default function CategoryForm({
+  onCategoryCreated,
+  onCancel,
+}: CategoryFormProps) {
   const [categoryFormData, setCategoryFormData] = useState<CategoryFormState>({
     name: "",
   });
@@ -50,7 +54,10 @@ export default function CategoryForm({ onCategoryCreated }: CategoryFormProps) {
           value={categoryFormData.name}
           onChange={handleChange}
         />
-        <button type="submit">Add Category</button>
+        <button type="submit">Add</button>
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
       </form>
     </>
   );

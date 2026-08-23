@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.module.scss";
 import { useState } from "react";
 import CategoryForm from "./components/categories/CategoryForm/CategoryForm";
 import Header from "./components/Header/Header";
@@ -42,9 +42,11 @@ function App() {
   return (
     <>
       <Header />
-      <CategoryList categories={categories} />
+      <CategoryList
+        categories={categories}
+        onCategoryCreated={onCategoryCreated}
+      />
       <TodoForm categories={categories} onTodoCreated={onTodoCreated} />
-      <CategoryForm onCategoryCreated={onCategoryCreated} />
       <TodoList
         todos={todos}
         categories={categories}
