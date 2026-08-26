@@ -83,9 +83,7 @@ export default function TodoForm({
       onTodoUpdated?.(updated);
     } else {
       const requestBody = toCreateTodoRequest(todoFormData);
-      console.log(requestBody);
       const createdTodo = await createTodo(requestBody);
-      console.log(createdTodo);
       onTodoCreated?.(createdTodo);
       setTodoFormData({
         title: "",
