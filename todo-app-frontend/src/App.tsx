@@ -1,12 +1,11 @@
 import classes from "./App.module.scss";
 import { useState } from "react";
 import Header from "./components/Header/Header";
-import TodoForm from "./components/todos/TodoForm/TodoForm";
 import type { TodoResponse } from "./schemas/todo-schemas";
 import type { CategoryResponse } from "./schemas/category-schemas";
 import TodoList from "./components/todos/TodoList/TodoList";
-import CategoryList from "./components/categories/CategoryList/CategoryList";
 import { deleteTodo, updateTodo } from "./services/todo-services";
+import TodoCreation from "./components/todos/TodoCreation/TodoCreation";
 
 function App() {
   const [todos, setTodos] = useState<TodoResponse[]>([]);
@@ -41,13 +40,11 @@ function App() {
   return (
     <main className={classes.main}>
       <Header />
-      <h2>Add Task</h2>
-      <CategoryList
+      <TodoCreation
         categories={categories}
         onCategoryCreated={onCategoryCreated}
+        onTodoCreated={onTodoCreated}
       />
-      <TodoForm categories={categories} onTodoCreated={onTodoCreated} />
-
       <TodoList
         todos={todos}
         categories={categories}
