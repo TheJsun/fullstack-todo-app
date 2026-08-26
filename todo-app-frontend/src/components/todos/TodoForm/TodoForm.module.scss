@@ -5,13 +5,12 @@
 
   &__row {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-between;
     gap: 8px;
   }
 
   &__title {
-    flex: 1 1 200px;
-    min-width: 0;
+    min-width: 100px;
   }
 
   &__desc {
@@ -29,6 +28,11 @@
   &__category {
     appearance: none;
     cursor: pointer;
+    min-width: 140px;
+  }
+
+  &__dueDate {
+    min-width: 45px;
   }
 }
 

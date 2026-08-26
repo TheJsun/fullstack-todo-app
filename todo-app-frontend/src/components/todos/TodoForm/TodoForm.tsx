@@ -113,7 +113,7 @@ export default function TodoForm({
           required
         >
           <option value="" disabled>
-            -- Select a category --
+            Select Category
           </option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
