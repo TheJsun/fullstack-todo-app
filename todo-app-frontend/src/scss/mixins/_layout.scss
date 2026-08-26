@@ -1,0 +1,24 @@
+@mixin flex($direction: row, $gap: 0) {
+  display: flex;
+  flex-direction: $direction;
+  gap: $gap;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin responsive-grid($columns: null, $min-col-width: 280px, $gap: 1rem) {
+  display: grid;
+  gap: $gap;
+
+  @if $columns {
+    // Fixed column count — you decide how many
+    grid-template-columns: repeat(#{$columns}, 1fr);
+  } @else {
+    // Fluid — columns wrap based on min width
+    grid-template-columns: repeat(auto-fit, minmax($min-col-width, 1fr));
+  }
+}
