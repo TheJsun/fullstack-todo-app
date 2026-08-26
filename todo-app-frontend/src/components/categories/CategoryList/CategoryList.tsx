@@ -33,7 +33,13 @@ export default function CategoryList({
       {!showCategoryForm && (
         <section className={`${classes["category-list"]}`}>
           {categories.map((c) => (
-            <button className={classes["category-card"]}>{c.name}</button>
+            <button
+              data-testid="categoryCard"
+              key={c.id}
+              className={classes["category-card"]}
+            >
+              {c.name}
+            </button>
           ))}
 
           <Button className="right-side" onClick={onToggleCategoryForm}>

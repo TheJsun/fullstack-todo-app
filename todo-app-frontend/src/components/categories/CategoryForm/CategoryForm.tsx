@@ -34,7 +34,6 @@ export default function CategoryForm({
     e.preventDefault();
     const requestBody = toCreateCategoryRequest(categoryFormData);
     const createdCategory = await createCategory(requestBody);
-    console.log("created category");
     onCategoryCreated(createdCategory);
     setCategoryFormData({ name: "" });
   };
@@ -47,7 +46,7 @@ export default function CategoryForm({
   };
 
   return (
-    <>
+    <section>
       <form className={classes.form} onSubmit={handleSubmit}>
         <input
           className={classes["category-form"]}
@@ -61,6 +60,6 @@ export default function CategoryForm({
           &times;
         </Button>
       </form>
-    </>
+    </section>
   );
 }

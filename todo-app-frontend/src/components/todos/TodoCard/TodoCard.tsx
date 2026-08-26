@@ -33,11 +33,19 @@ export default function TodoCard({
       </div>
 
       <div className={classes.todo__buttons}>
-        <Button variant="edit" onClick={() => onEdit(todo)}>
+        <Button
+          data-testid="editTodoButton"
+          variant="edit"
+          onClick={() => onEdit(todo)}
+        >
           Edit
         </Button>
 
-        <Button variant="delete" onClick={() => onDelete(todo.id)}>
+        <Button
+          data-testid="deleteTodoButton"
+          variant="delete"
+          onClick={() => onDelete(todo.id)}
+        >
           &times;
         </Button>
       </div>

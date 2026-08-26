@@ -28,7 +28,9 @@ export default function TodoList({
       <h2>To Do</h2>
       <ul>
         {todos.length === 0 && (
-          <h4 className={classes.message}>Nothing to do yet, add one above!</h4>
+          <h4 data-testid="emptyMessage" className={classes.message}>
+            Nothing to do yet, add one above!
+          </h4>
         )}
         {todos.map((todo) =>
           todo.id === editingId ? (
