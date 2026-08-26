@@ -33,7 +33,11 @@ export default function CategoryList({
       {!showCategoryForm && (
         <section className={`${classes["category-list"]}`}>
           {categories.map((c) => (
-            <button key={c.id} className={classes["category-card"]}>
+            <button
+              data-testid="categoryCard"
+              key={c.id}
+              className={classes["category-card"]}
+            >
               {c.name}
             </button>
           ))}

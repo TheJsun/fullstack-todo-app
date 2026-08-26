@@ -46,7 +46,7 @@ export default function CategoryForm({
   };
 
   return (
-    <>
+    <section>
       <form className={classes.form} onSubmit={handleSubmit}>
         <input
           className={classes["category-form"]}
@@ -60,6 +60,6 @@ export default function CategoryForm({
           &times;
         </Button>
       </form>
-    </>
+    </section>
   );
 }
