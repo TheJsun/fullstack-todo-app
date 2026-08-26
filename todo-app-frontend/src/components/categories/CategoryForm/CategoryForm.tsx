@@ -34,7 +34,6 @@ export default function CategoryForm({
     e.preventDefault();
     const requestBody = toCreateCategoryRequest(categoryFormData);
     const createdCategory = await createCategory(requestBody);
-    console.log("created category");
     onCategoryCreated(createdCategory);
     setCategoryFormData({ name: "" });
   };
