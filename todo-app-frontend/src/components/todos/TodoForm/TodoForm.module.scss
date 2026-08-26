@@ -11,6 +11,7 @@
 
   &__title {
     min-width: 100px;
+    width: 40%;
   }
 
   &__desc {
@@ -23,6 +24,7 @@
     padding: 0 10px;
     font-size: 14px;
     color: var(--ink-soft);
+    width: 30%;
   }
 
   &__category {
