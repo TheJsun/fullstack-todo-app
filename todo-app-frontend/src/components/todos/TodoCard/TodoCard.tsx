@@ -33,7 +33,9 @@ export default function TodoCard({
       </div>
 
       <div className={classes.todo__buttons}>
-        <Button onClick={() => onEdit(todo)}>Edit</Button>
+        <Button variant="edit" onClick={() => onEdit(todo)}>
+          Edit
+        </Button>
 
         <Button variant="delete" onClick={() => onDelete(todo.id)}>
           &times;

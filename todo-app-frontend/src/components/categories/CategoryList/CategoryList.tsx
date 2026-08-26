@@ -30,15 +30,17 @@ export default function CategoryList({
 
   return (
     <>
-      <section className={`${classes["category-list"]}`}>
-        {categories.map((c) => (
-          <button className={classes["category-card"]}>{c.name}</button>
-        ))}
+      {!showCategoryForm && (
+        <section className={`${classes["category-list"]}`}>
+          {categories.map((c) => (
+            <button className={classes["category-card"]}>{c.name}</button>
+          ))}
 
-        <Button className="right-side" onClick={onToggleCategoryForm}>
-          Add Category
-        </Button>
-      </section>
+          <Button className="right-side" onClick={onToggleCategoryForm}>
+            Add Category
+          </Button>
+        </section>
+      )}
 
       {showCategoryForm && (
         <div className={classes["category-form"]}>

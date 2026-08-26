@@ -138,7 +138,7 @@ export default function TodoForm({
         name="description"
         value={todoFormData.description}
         onChange={handleChange}
-        placeholder="Add a short description"
+        placeholder="Add a short description..."
       />
 
       <div className={classes.buttons}>

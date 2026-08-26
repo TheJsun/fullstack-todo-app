@@ -41,11 +41,13 @@ function App() {
   return (
     <main className={classes.main}>
       <Header />
-      <TodoForm categories={categories} onTodoCreated={onTodoCreated} />
+      <h2>Add Task</h2>
       <CategoryList
         categories={categories}
         onCategoryCreated={onCategoryCreated}
       />
+      <TodoForm categories={categories} onTodoCreated={onTodoCreated} />
+
       <TodoList
         todos={todos}
         categories={categories}

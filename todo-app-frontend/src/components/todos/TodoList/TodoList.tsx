@@ -25,7 +25,11 @@ export default function TodoList({
 
   return (
     <section className={classes.todoListContainer}>
+      <h2>To do</h2>
       <ul>
+        {todos.length === 0 && (
+          <h4 className={classes.message}>Nothing to do yet, add one above!</h4>
+        )}
         {todos.map((todo) =>
           todo.id === editingId ? (
             <TodoForm

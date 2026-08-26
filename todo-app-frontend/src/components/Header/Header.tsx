@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <header className={classes.header}>
-      <h1 className={classes.header__title}>Today's Tasks</h1>
+      <h1 className={classes.header__title}>Tododle</h1>
       <p className={classes.header__date}>{formatted}</p>
     </header>
   );
